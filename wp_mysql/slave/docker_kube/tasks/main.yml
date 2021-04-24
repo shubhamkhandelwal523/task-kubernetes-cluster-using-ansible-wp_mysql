@@ -1,0 +1,49 @@
+---
+# tasks file for docker_kube
+  - name: "Install Docker"
+    package:
+      name: "docker"
+
+  - name: "Starting  Docker services"
+    service:
+      name: "docker"
+      enabled: yes
+      state: started
+   
+  - name: "Creating kubeadm yum repo" 
+    yum_repository:
+      name: "kubernetes"
+      description: "k8s repo"
+      baseurl: 'https://packages.cloud.google.com/yum/repos/kubernetes-el7-\$basearch'
+      gpgcheck: yes
+      repo_gpgcheck: yes
+      gpgkey: https://packages.cloud.google.com/yum/doc/yum-key.gpg https://packages.cloud.google.com/yum/doc/rpm-package-key.gpg
+
+  - name: "Install kubeadm"
+    package:
+      name: kubeadm
+  
+  - name: "Starting kubelet services"
+    service:
+      name: "kubelet"
+      enabled: yes
+      state: started
+
+  - name: "Creating docker config file"
+    copy:
+      dest: "/etc/docker/daemon.json"
+      content: |
+               {
+               "exec-opts": ["native.cgroupdriver=systemd"]
+               }
+  - name: "Restarting Docker services"
+    service:
+      name: "docker"
+      state: restarted
+
+  - name: "Install iproute-tc"
+    package:
+      name: "iproute-tc"
+
+
+

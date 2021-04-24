@@ -1,0 +1,29 @@
+- hosts: localhost
+  gather_facts: no
+  become: true
+  become_user: root
+  become_method: sudo
+  roles:
+  - role: "aws_instance"
+
+- hosts: aws_instance_master
+  gather_facts: no
+  become: true
+  become_user: root
+  become_method: sudo
+  roles:
+  - role: "docker_kube"
+  - role: "master"
+
+- hosts: aws_instance_slave
+  gather_facts: no
+  become: true
+  become_user: root
+  become_method: sudo
+  vars_prompt:
+  - name: join_cmd
+    prompt: "Enter join command to continue:- "
+    private: no
+  roles:
+  - role: "docker_kube"
+  - role: "slave"

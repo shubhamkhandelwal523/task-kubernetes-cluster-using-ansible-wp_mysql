@@ -1,0 +1,6 @@
+---
+# vars file for slave
+vars_prompt:
+  - name: join_cmd
+    prompt: "Enter join command to continue :- "
+    private: no
